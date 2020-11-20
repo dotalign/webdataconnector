@@ -1,0 +1,21 @@
+{
+  "name": "DotAlignCloudConnectorForTableau",
+  "version": "1.0.0",
+  "description": "DotAlign Cloud connector for Tableau",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "Jaspreet Bakshi",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.6.0",
+    "webpack-cli": "^4.2.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "path": "^0.12.7"
+  }
+}
