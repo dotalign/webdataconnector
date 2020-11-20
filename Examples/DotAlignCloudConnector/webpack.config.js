@@ -1,9 +1,12 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: { 
+    oauth_flow: './src/oauth_flow.js',
+    client_credentials_flow: './src/client_credentials_flow.js',
+  },
   output: {
-    filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
+    filename: '[name].bundle.js'
   },
 };

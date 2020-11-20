@@ -16,17 +16,20 @@ var environment = helpers.getEnvironmentParams();
 // -------------------------------------------------- //
 app.set('port', environment.port);
 app.use(cookieParser());                              // cookieParser middleware to work with cookies
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/dist'));
 
 // -------------------------------------------------- //
 // Variables
 // -------------------------------------------------- //
-var clientID = process.env.HPDAAS_CLIENT_ID || config.CLIENT_ID;
-var clientSecret = process.env.HPDAAS_CLIENT_SECRET || config.CLIENT_SECRET;
-var tokenPath = config.TOKEN_PATH;
+var clientID = environment.client_id;
+var clientSecret = environment.client_secret;
+var tokenPath = `https://login.microsoftonline.com/${environment.tenant_id}/oauth2/v2.0/token`;
+var redirectUri = environment.baseUrl + ":" + environment.port + environment.redirect;
+
 console.log(clientID);
 console.log(clientSecret);
-var redirectURI = config.HOSTPATH + ":" + config.PORT + config.REDIRECT_PATH
+console.log(tokenPath);
+console.log(redirectUri);
 
 // -------------------------------------------------- //
 // Routes
@@ -36,8 +39,6 @@ app.get('/', function(req, res) {
   res.redirect('/index.html');
 });
 
-// This route is hit once HP Techpulse redirects to our
-// server after performing authentication
 app.get('/redirect', function(req, res) {
   // get our authorization code
   authCode = req.query.code;
@@ -45,10 +46,8 @@ app.get('/redirect', function(req, res) {
 
   // Set up a request for an long-lived Access Token now that we have a code
   
-  // 'client_id': clientID,
-  // 'client_secret': clientSecret,
   var requestObject = {
-      'redirect_uri': redirectURI,   
+      'redirect_uri': redirectUri,   
       'code': authCode,
       'grant_type': 'authorization_code'
   };
@@ -57,7 +56,7 @@ app.get('/redirect', function(req, res) {
   var basicAuthHeader = 'Basic ' + auth;
 
   var token_request_header = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/x-www-form-urlencoded',
 	  'Authorization':  basicAuthHeader
   };
   
@@ -90,10 +89,6 @@ app.get('/redirect', function(req, res) {
   });
 });
 
-
-// -------------------------------------------------- //
-// Create and start our server
-// -------------------------------------------------- //
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

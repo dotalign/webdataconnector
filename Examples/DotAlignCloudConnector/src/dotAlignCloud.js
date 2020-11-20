@@ -68,7 +68,7 @@ async function getDataWithRetries(maxRetries, url, accessToken) {
   return response;
 }
 
-async function getSomeData(baseUrl, accessToken, params, urlCreator) {
+async function getSomeData(apiBaseUrl, accessToken, params, urlCreator) {
   var totalFetchCount = params.totalFetchCount;
   var fetched = 0;
   var areMore = true;
@@ -77,7 +77,7 @@ async function getSomeData(baseUrl, accessToken, params, urlCreator) {
 
   while (areMore && fetched < totalFetchCount) {
     var before = process.hrtime();
-    var url = await urlCreator(baseUrl, params);
+    var url = await urlCreator(apiBaseUrl, params);
     var result = null;
 
     try {
@@ -120,7 +120,7 @@ async function fetchDC(environment, params, urlCreator) {
   var accessToken = response.access_token;
   var done = false;
   var fetched = 0;
-  var baseUrl = environment.baseUrl;
+  var apiBaseUrl = environment.apiBaseUrl;
 
   while (!done) {
     params.skip = fetched;
@@ -129,7 +129,7 @@ async function fetchDC(environment, params, urlCreator) {
 
     try {
       var before = process.hrtime();
-      result = await getSomeData(baseUrl, accessToken, params, urlCreator);
+      result = await getSomeData(apiBaseUrl, accessToken, params, urlCreator);
       var elapsed = process.hrtime(before);
       console.log(
         `Finished a run in ${elapsed[0]} seconds. ${result.fetched} items were fetched.`
@@ -143,8 +143,37 @@ async function fetchDC(environment, params, urlCreator) {
       accessToken = response.access_token;
     }
   }
+}
+
+async function fetchDCWithAccessToken(environment, params, urlCreator, accessToken) {
+  var done = false;
+  var fetched = 0;
+  var apiBaseUrl = environment.apiBaseUrl;
+
+  while (!done) {
+    params.skip = fetched;
+
+    var result = null;
+
+    try {
+      var before = process.hrtime();
+      result = await getSomeData(apiBaseUrl, accessToken, params, urlCreator);
+      var elapsed = process.hrtime(before);
+      console.log(
+        `Finished a run in ${elapsed[0]} seconds. ${result.fetched} items were fetched.`
+      );
+      done = true;
+    } catch (e) {
+      dotAlignUtils.logObject(e);
+      console.log(`An exception was encountered. Fetched ${e.fetched} so far.`);
+      fetched = e.fetched;
+    }
+  }
 
   return result;
 }
 
-module.exports = { fetchDC };
+module.exports = { 
+  fetchDCWithAccessToken,
+  fetchDC 
+};
