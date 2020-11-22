@@ -17,18 +17,23 @@ function getEnvironmentParams() {
       // client_secret: process.env.CLIENT_SECRET,
       // scope: process.env.SCOPE,
 
-      // apiBaseUrl: "https://qa.dotalign.com/api",
-      apiBaseUrl: "https://dotalign-obhnbxktkccdo-webapp.azurewebsites.net/api",
+      // Info related to the DotAlign Cloud API
+      // apiBaseUrl: "https://dotalign-obhnbxktkccdo-webapp.azurewebsites.net/api",
+      apiBaseUrl: "https://qa.dotalign.com/api",
       tenant_id: "ef816895-7d31-42b9-a2e6-a2cc244e05c5",
       grant_type: "client_credentials",
       client_id: "f4ac093f-f62c-49c6-ad79-b84ac4fe79c1",
       client_secret: "5RzN~P7dF.irA5b8~dw3XUA.nLheXSb-Jg",
       scope: "128721d7-3cc6-44b0-97a2-b709323602af/.default",
 
-      // Specific to how this is run in Tableau context
-      baseUrl: "http://localhost",
-      port: 8888,
+      // The server to help with OAuth
+      oAuthBaseUrl: "http://localhost",
+      oAuthPort: 5001,
       redirect: "/redirect",
+
+      // The tableau server
+      tableauBaseUrl: "http://localhost",
+      tableauPort: 8888
   };
 }
 

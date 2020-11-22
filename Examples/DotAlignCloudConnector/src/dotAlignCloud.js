@@ -5,7 +5,6 @@ const dotAlignUtils = require("./dotAlignUtils");
 async function postData(url, body) {
   const response = await fetch(url, {
     method: "POST",
-    // mode: 'no-cors',
     body: body,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -17,6 +16,29 @@ async function postData(url, body) {
 
   return response.json();
 }
+
+// POST utility function
+async function postDataGetResponse(url, body) {
+    const response = await fetch(url, {
+      method: "POST",
+      body: body,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    console.log("Response: ");
+    dotAlignUtils.logObject(response);
+
+    var responseJson = response.json();
+    console.log("Response json: ");
+    dotAlignUtils.logObject(responseJson);
+
+    return { 
+        response: response,
+        json: responseJson
+    };
+  }
 
 // GET utility function
 async function getData(url, accessToken) {
@@ -76,7 +98,7 @@ async function getSomeData(apiBaseUrl, accessToken, params, urlCreator) {
   var data = [];
 
   while (areMore && fetched < totalFetchCount) {
-    var before = process.hrtime();
+    var before = Date.now();
     var url = await urlCreator(apiBaseUrl, params);
     var result = null;
 
@@ -98,12 +120,10 @@ async function getSomeData(apiBaseUrl, accessToken, params, urlCreator) {
     params.skip += params.take;
     fetched += result.data.length;
 
-    var elapsed = process.hrtime(before);
-    var seconds = elapsed[0];
-    var milliseconds = elapsed[1];
+    var elapsed = Date.now() - before;
 
     console.log(
-      `Fetched ${result.page_start} to ${result.page_end} in ${seconds}.${milliseconds}s`
+      `Fetched ${result.page_start} to ${result.page_end} in ${elapsed} ms`
     );
   }
 
@@ -156,24 +176,28 @@ async function fetchDCWithAccessToken(environment, params, urlCreator, accessTok
     var result = null;
 
     try {
-      var before = process.hrtime();
+      var before = Date.now();
       result = await getSomeData(apiBaseUrl, accessToken, params, urlCreator);
-      var elapsed = process.hrtime(before);
+      var after = Date.now();
+      var elapsed = after - before;
       console.log(
-        `Finished a run in ${elapsed[0]} seconds. ${result.fetched} items were fetched.`
+        `Finished a run in ${elapsed} ms. ${result.fetched} items were fetched.`
       );
       done = true;
     } catch (e) {
-      dotAlignUtils.logObject(e);
-      console.log(`An exception was encountered. Fetched ${e.fetched} so far.`);
-      fetched = e.fetched;
+        console.log(`An exception was encountered. Fetched ${e.fetched} so far.`);
+        console.error(e)
+        fetched = e.fetched;
     }
   }
 
   return result;
 }
 
-module.exports = { 
-  fetchDCWithAccessToken,
-  fetchDC 
+module.exports = {
+    postData,
+    postDataGetResponse,
+    getAccessToken,
+    fetchDCWithAccessToken,
+    fetchDC 
 };

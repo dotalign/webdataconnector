@@ -1,12 +1,9 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
-var querystring = require('querystring');
 var http = require('http');
-var request = require('request');
-var path = require('path');
-var config = require('./config.js'); 
-var sys = require('util');
 var helpers = require('./helpers');
+var dotAlignCloud = require('./dotAlignCloud');
+var dotAlignUtils = require('./dotAlignUtils');
 var app = express();
 
 var environment = helpers.getEnvironmentParams();
@@ -14,22 +11,9 @@ var environment = helpers.getEnvironmentParams();
 // -------------------------------------------------- //
 // Express set-up and middleware
 // -------------------------------------------------- //
-app.set('port', environment.port);
+app.set('port', environment.oAuthPort);
 app.use(cookieParser());                              // cookieParser middleware to work with cookies
 app.use(express.static(__dirname + '/dist'));
-
-// -------------------------------------------------- //
-// Variables
-// -------------------------------------------------- //
-var clientID = environment.client_id;
-var clientSecret = environment.client_secret;
-var tokenPath = `https://login.microsoftonline.com/${environment.tenant_id}/oauth2/v2.0/token`;
-var redirectUri = environment.baseUrl + ":" + environment.port + environment.redirect;
-
-console.log(clientID);
-console.log(clientSecret);
-console.log(tokenPath);
-console.log(redirectUri);
 
 // -------------------------------------------------- //
 // Routes
@@ -40,53 +24,47 @@ app.get('/', function(req, res) {
 });
 
 app.get('/redirect', function(req, res) {
-  // get our authorization code
-  authCode = req.query.code;
-  console.log("Auth Code is: " + authCode);
+    console.log("Request body: ");
+    console.log(req.body);
 
-  // Set up a request for an long-lived Access Token now that we have a code
-  
-  var requestObject = {
-      'redirect_uri': redirectUri,   
-      'code': authCode,
-      'grant_type': 'authorization_code'
-  };
-  
-  var auth = new Buffer(clientID + ':' + clientSecret).toString('base64');
-  var basicAuthHeader = 'Basic ' + auth;
+    authCode = req.query.code;
+    var tokenUrl = `https://login.microsoftonline.com/${environment.tenant_id}/oauth2/v2.0/token`;
+    var clientId = environment.client_id;
+    var clientSecret = environment.client_secret;
+    var scope = environment.scope;
+    var redirectUrl = environment.oAuthBaseUrl + ":" + environment.oAuthPort + environment.redirect;
 
-  var token_request_header = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-	  'Authorization':  basicAuthHeader
-  };
-  
-  // Build the post request for the OAuth endpoint
-  var options = {
-      method: 'POST',
-      url: tokenPath,
-      form: requestObject,
-      headers: token_request_header, 
-  };
+    console.log("\nAuth Code: ");
+    console.log(authCode);
+    console.log(`tokenUrl: ${tokenUrl}`);
+    console.log(`clientId: ${clientId}`);
+    console.log(`clientSecret: ${clientSecret}`);
+    console.log(`scope: ${scope}`);
 
-  // Make the request
-  request(options, function (error, response, body) {
+    var body = 
+        `client_id=${clientId}&` + 
+        `scope=${scope}&` + 
+        `code=${authCode}&` + 
+        `redirect_uri=${redirectUrl}&` + 
+        `grant_type=authorization_code&` + 
+        `client_secret=${clientSecret}`;
 
-    if (!error) {
-      // We should receive  { access_token: ACCESS_TOKEN }
-      // if everything went smoothly, so parse the token from the response
-      body = JSON.parse(body);
-      var accessToken = body.access_token;
-      console.log('accessToken: ' + accessToken);
+    console.log("\nPosting following body to get access token: ");
+    console.log(body);
 
-      // Set the token in cookies so the client can access it
-      res.cookie('accessToken', accessToken, { });
+    var r = dotAlignCloud.postData(tokenUrl, body)
+        .then(result => {
+            console.log("\nThe response object: ");
+            dotAlignUtils.logObject(result);
 
-      // Head back to the WDC page
-      res.redirect('/index.html');
-    } else {
-      console.log(error);
-    }
-  });
+            var accessToken = result.access_token;
+            
+            // Set this cookie so Tableau can access it
+            res.cookie('accessToken', accessToken, { });
+
+            // Send control back to the web connector
+            res.redirect('http://localhost:8888/Examples/DotAlignCloudConnector/dist/oauth_flow.html');
+        });
 });
 
 http.createServer(app).listen(app.get('port'), function(){
