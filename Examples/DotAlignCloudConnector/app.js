@@ -1,9 +1,9 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var http = require('http');
-var helpers = require('./helpers');
-var dotAlignCloud = require('./dotAlignCloud');
-var dotAlignUtils = require('./dotAlignUtils');
+var helpers = require('./src/helpers');
+var dotAlignCloud = require('./src/dotAlignCloud');
+var dotAlignUtils = require('./src/dotAlignUtils');
 var app = express();
 
 var environment = helpers.getEnvironmentParams();
@@ -13,14 +13,14 @@ var environment = helpers.getEnvironmentParams();
 // -------------------------------------------------- //
 app.set('port', environment.oAuthPort);
 app.use(cookieParser());                              // cookieParser middleware to work with cookies
-app.use(express.static(__dirname + '/dist'));
+app.use(express.static(__dirname + '/dist'));   
 
 // -------------------------------------------------- //
 // Routes
 // -------------------------------------------------- //
 
 app.get('/', function(req, res) {
-  res.redirect('/index.html');
+    res.redirect('/index.html');
 });
 
 app.get('/redirect', function(req, res) {
@@ -63,7 +63,8 @@ app.get('/redirect', function(req, res) {
             res.cookie('accessToken', accessToken, { });
 
             // Send control back to the web connector
-            res.redirect('http://localhost:8888/Examples/DotAlignCloudConnector/dist/oauth_flow.html');
+            // res.redirect('http://localhost:8888/Examples/DotAlignCloudConnector/dist/oauth_flow.html');
+            res.redirect('http://localhost:5001/oauth_flow.html');
         });
 });
 

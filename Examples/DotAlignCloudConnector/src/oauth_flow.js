@@ -31,7 +31,8 @@ var dotAlignUtils = require('./dotAlignUtils');
 
         // If we are not in the data gathering phase, we want to store the token
         // This allows us to access the token in the data gathering phase
-        if (tableau.phase == tableau.phaseEnum.interactivePhase || tableau.phase == tableau.phaseEnum.authPhase) {
+        if (tableau.phase == tableau.phaseEnum.interactivePhase || 
+            tableau.phase == tableau.phaseEnum.authPhase) {
             if (hasAuth) {
                 tableau.password = accessToken;
 
@@ -110,31 +111,34 @@ var dotAlignUtils = require('./dotAlignUtils');
     tableau.registerConnector(dotalignConnector);
 
     $(document).ready(function() {
-      var accessToken = Cookies.get("accessToken");
-      var hasAuth = accessToken && accessToken.length > 0;
+        var accessToken = Cookies.get("accessToken");
+        var hasAuth = accessToken && accessToken.length > 0;
 
-      if (hasAuth) { 
-        console.log("Access token was found: ");
-      } else { 
-        console.log("Access token was not found");
-      }
+        if (hasAuth) { 
+            console.log("Access token was found. Setting it into the password field.");
+            tableau.password = accessToken;
+        } else { 
+            console.log("Access token was not found");
+        }
 
-      updateUIWithAuthState(hasAuth);
+        updateUIWithAuthState(hasAuth);
 
-      $("#connectbutton").click(function() {
-        doAuthorizationRedirect();
-      });
+        $("#connectbutton").click(function() {
+            doAuthorizationRedirect();
+        });
 
-      $("#submitButton").click(function() {
-        tableau.connectionName = "DotAlign Cloud API";
-        tableau.submit();
-      });
+        $("#submitButton").click(function() {
+            tableau.connectionName = "DotAlign Cloud API";
+            tableau.submit();
+        });
     });
 
   function updateUIWithAuthState(hasAuth) {
     if (hasAuth) {
+        console.log("Page has access token");
         $(".notsignedin").css('display', 'none');
     } else {
+        console.log("Page does not have access token");
         $(".notsignedin").css('display', 'block');
     }
   }
@@ -143,16 +147,16 @@ var dotAlignUtils = require('./dotAlignUtils');
     var environment = helpers.getEnvironmentParams();
 
     var authorizationUrl = 
-      `https://login.microsoftonline.com/${environment.tenant_id}/oauth2/v2.0/authorize`;
+        `https://login.microsoftonline.com/${environment.tenant_id}/oauth2/v2.0/authorize`;
     
     // Redirect to the server that is helping complete the OAuth flow
     var redirectUri = environment.oAuthBaseUrl + ":" + environment.oAuthPort + environment.redirect;
 
     var fullUrl = `${authorizationUrl}?` + 
-      `client_id=${environment.client_id}&` + 
-      `response_type=code&` + 
-      `redirect_uri=${redirectUri}&` + 
-      `scope=${environment.scope}&`;
+        `client_id=${environment.client_id}&` + 
+        `response_type=code&` + 
+        `redirect_uri=${redirectUri}&` + 
+        `scope=${environment.scope}&`;
   
     console.log("Full authorization url: ");
     console.log(fullUrl);
@@ -164,15 +168,15 @@ var dotAlignUtils = require('./dotAlignUtils');
 
 async function getDataFromDotAlign(environment, teamNumber) {
     console.log("Starting to get data from DotAlign Cloud...");
-    var accessToken = Cookies.get("accessToken");
+    var accessToken = Cookies.get("accessToken") || tableau.password;
     console.log("Using the following access token to get data from DotAlign Cloud");
     console.log(accessToken);
 
     var peopleParams = {
-        totalFetchCount: 1000,
+        totalFetchCount: 100,
         teamNumber: teamNumber,
         skip: 0,
-        take: 500,
+        take: 100,
         detailLevel: "IncludeDependentDetailsAndInteractionStats"
     };
       
