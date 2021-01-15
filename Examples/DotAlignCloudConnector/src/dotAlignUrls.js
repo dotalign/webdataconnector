@@ -16,6 +16,15 @@ async function peopleFetchUrlCreator(baseUrl, params) {
   return url;
 }
 
+async function companiesFetchUrlCreator(baseUrl, params) {
+    var teamNumber = params.teamNumber;
+    var skip = params.skip;
+    var take = params.take;
+    var detailLevel = params.detailLevel;
+    var url = `${baseUrl}/companies?SourceTeam=${teamNumber}&Skip=${skip}&Take=${take}&IncludeDetailLevel=${detailLevel}`;
+    return url;
+}
+
 async function contributorPeopleFetchUrlCreator(baseUrl, params) {
   var teamNumber = params.teamNumber;
   var skip = params.skip;
@@ -37,8 +46,9 @@ async function contributorCompaniesFetchUrlCreator(baseUrl, params) {
 }
 
 module.exports = { 
-  teamMemberFetchUrlCreator, 
-  peopleFetchUrlCreator, 
-  contributorPeopleFetchUrlCreator, 
-  contributorCompaniesFetchUrlCreator 
+    teamMemberFetchUrlCreator, 
+    peopleFetchUrlCreator,
+    companiesFetchUrlCreator,
+    contributorPeopleFetchUrlCreator, 
+    contributorCompaniesFetchUrlCreator 
 }

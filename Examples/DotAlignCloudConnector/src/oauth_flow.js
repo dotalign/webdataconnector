@@ -1,7 +1,5 @@
-var dotAlignCloud = require('./dotAlignCloud');
-var dotAlignUrls = require('./dotAlignUrls');
 var helpers = require('./helpers');
-var dotAlignUtils = require('./dotAlignUtils');
+var dotalignTableau = require('./dotAlignTableau');
 
 (function() {
     // Create the connector object
@@ -48,92 +46,46 @@ var dotAlignUtils = require('./dotAlignUtils');
 
     // Define the schema
     dotalignConnector.getSchema = function(schemaCallback) {
-        var cols = [{
-            id: "full_name",
-            dataType: tableau.dataTypeEnum.string
-        }, {
-            id: "email_address",
-            alias: "email_address",
-            dataType: tableau.dataTypeEnum.string
-        }, {
-            id: "job_title",
-            alias: "job_title",
-            dataType: tableau.dataTypeEnum.string
-        }, {
-            id: "company_name",
-            dataType: tableau.dataTypeEnum.string
-        }, {
-          id: "relationship_score",
-          dataType: tableau.dataTypeEnum.int
-        }, {
-            id: "best_introducer",
-            dataType: tableau.dataTypeEnum.string
-        }];
-
-        var tableSchema = {
-            id: "People",
-            alias: "People in the network",
-            columns: cols
-        };
-
-        schemaCallback([tableSchema]);
+        dotalignTableau.getSchema(schemaCallback);
     };
 
     dotalignConnector.getData = function(table, doneCallback) {
-        var environment = helpers.getEnvironmentParams();
+        var accessToken = Cookies.get("accessToken") || tableau.password;
         
-        console.log("Environment: ");
-        dotAlignUtils.logObject(environment);
-
-        var rows = [];
-        
-        var result = getDataFromDotAlign(environment, 1)
-            .then(result => {
-                for (i = 0; i < result.length; i++) {
-                    var person = result[i];
-                    var row = {
-                        'full_name': person.PersonNameText,
-                        'job_title': person.BestJobTitleText,
-                        'company_name': person.BestJobMatchedCompanyName,
-                        'email_address': person.BestEmailAddrText,
-                        'best_introducer': person.BestKnowerNameText, 
-                        'relationship_score' : person.WeKnowPersonScore
-                    };
-
-                    rows.push(row);
-                }
-
-                table.appendRows(rows);
-                doneCallback();
-            });
+        dotalignTableau.getData(
+            accessToken, 
+            table,
+            doneCallback, 
+            tableau);
     };
 
     tableau.registerConnector(dotalignConnector);
+})();
 
-    $(document).ready(function() {
-        var accessToken = Cookies.get("accessToken");
-        var hasAuth = accessToken && accessToken.length > 0;
+$(document).ready(function() {
+    var accessToken = Cookies.get("accessToken");
+    var hasAuth = accessToken && accessToken.length > 0;
 
-        if (hasAuth) { 
-            console.log("Access token was found. Setting it into the password field.");
-            tableau.password = accessToken;
-        } else { 
-            console.log("Access token was not found");
-        }
+    if (hasAuth) { 
+        console.log("Access token was found. Setting it into the password field.");
+        tableau.password = accessToken;
+    } else { 
+        console.log("Access token was not found");
+    }
 
-        updateUIWithAuthState(hasAuth);
+    updateUIWithAuthState(hasAuth);
 
-        $("#connectbutton").click(function() {
-            doAuthorizationRedirect();
-        });
-
-        $("#submitButton").click(function() {
-            tableau.connectionName = "DotAlign Cloud API";
-            tableau.submit();
-        });
+    $("#connectbutton").click(function() {
+        doAuthorizationRedirect();
     });
 
-  function updateUIWithAuthState(hasAuth) {
+    $("#submitButton").click(function() {
+        tableau.connectionName = "DotAlign Cloud API";
+        tableau.submit();
+    });
+});
+
+function updateUIWithAuthState(hasAuth) {
     if (hasAuth) {
         console.log("Page has access token");
         $(".notsignedin").css('display', 'none');
@@ -141,9 +93,9 @@ var dotAlignUtils = require('./dotAlignUtils');
         console.log("Page does not have access token");
         $(".notsignedin").css('display', 'block');
     }
-  }
-  
-  function doAuthorizationRedirect() {
+}
+
+function doAuthorizationRedirect() {
     var environment = helpers.getEnvironmentParams();
 
     var authorizationUrl = 
@@ -163,28 +115,4 @@ var dotAlignUtils = require('./dotAlignUtils');
     
     // Send the client to the authorize url to begin the OAuth flow
     window.location.href = fullUrl;
-  }
-})();
-
-async function getDataFromDotAlign(environment, teamNumber) {
-    console.log("Starting to get data from DotAlign Cloud...");
-    var accessToken = Cookies.get("accessToken") || tableau.password;
-    console.log("Using the following access token to get data from DotAlign Cloud");
-    console.log(accessToken);
-
-    var peopleParams = {
-        totalFetchCount: 100,
-        teamNumber: teamNumber,
-        skip: 0,
-        take: 100,
-        detailLevel: "IncludeDependentDetailsAndInteractionStats"
-    };
-      
-    var result = await dotAlignCloud.fetchDCWithAccessToken(
-        environment, 
-        peopleParams, 
-        dotAlignUrls.peopleFetchUrlCreator,
-        accessToken);
-
-      return result.data;
 }
