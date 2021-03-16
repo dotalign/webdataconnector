@@ -14,13 +14,17 @@ function getSchema(schemaCallback) {
 async function getData(accessToken, table, tableau) {
     var environment = helpers.getEnvironmentParams();
     var teamNumber = 1;
+    var skip = 0;
+    var take = 500;
     var rows = [];
 
     var result = await getDataFromDotAlign(
         accessToken, 
         environment, 
         teamNumber,
-        table.tableInfo.id, 
+        table.tableInfo.id,
+        skip,
+        take,
         tableau);
 
     switch (table.tableInfo.id) { 
@@ -44,10 +48,10 @@ async function getDataFromDotAlign(
     accessToken,
     environment, 
     teamNumber,
-    category,
+    tableName,
+    skip,
+    take,
     tableau) {
-
-    var countToFetch = 500;
 
     if (null != tableau) { 
         tableau.reportProgress("Starting to fetch data from DotAlign...");
@@ -55,14 +59,15 @@ async function getDataFromDotAlign(
 
     var result = null;
 
-    switch (category) {
+    switch (tableName) {
         
         case contactSchema.getTableName():
             
             result = await contactsFetcher.run(
                 environment,
                 teamNumber,
-                countToFetch,
+                skip,
+                take,
                 accessToken);
 
             break;
@@ -72,14 +77,15 @@ async function getDataFromDotAlign(
             result = await companiesFetcher.run(
                 environment, 
                 teamNumber,
-                countToFetch, 
+                skip,
+                take, 
                 accessToken);
 
             break;
         
         default:
 
-            throw `Unexpected category of data requested: ${category}` 
+            throw `Unexpected category of data requested: ${tableName}` 
     }
 
     if (null != tableau) {

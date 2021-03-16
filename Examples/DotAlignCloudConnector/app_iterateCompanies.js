@@ -1,13 +1,20 @@
-const helpers = require("./src/helpers");
-const companiesFetcher = require("./src/fetchers/companies");
+const helpers = require("./src/dc/helpers");
+const companiesFetcher = require("./src/dc/fetchers/companies");
 const fs = require('fs').promises;
-const kumuCompaniesTransformer = require("./src/transformers/kumu/company");
-const tableauTransformer = require("./src/transformers/company");
-const utils = require("./src/dotalignUtils");
+const kumuCompaniesTransformer = require("./src/kumu/company");
+const tableauTransformer = require("./src/tableau/transformers/company");
+const utils = require("./src/dc/dotalignUtils");
 
 async function main() {
     var environment = await helpers.getEnvironmentParams();
-    var result = await companiesFetcher.run(environment, 1 /*teamNumber*/, 500 /*count*/);
+    
+    var result = await companiesFetcher.run(
+        environment, 
+        1 /* teamNumber */, 
+        0 /* skip*/,
+        500 /* take */,
+        null /* accessToken */);
+    
     var companies = result.data;
     var tableauCompanies = tableauTransformer.transform(companies, /* tableau */ null);
 

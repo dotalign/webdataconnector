@@ -22,8 +22,6 @@ var dotalignTableau = require('./dotAlignTableau');
 
         var accessToken = Cookies.get("accessToken");
 
-        console.log('About to check hasAuth');
-
         var hasAuth = (accessToken && accessToken.length > 0) || tableau.password.length > 0;
         updateUIWithAuthState(hasAuth);
 

@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: { 
+  entry: {
     oauth_flow: './src/tableau/oauth_flow.js'
   },
   output: {

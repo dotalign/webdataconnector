@@ -4,7 +4,8 @@ const dotAlignUrls = require("../dotAlignUrls");
 async function run(
   environment,
   teamNumber,
-  count,
+  skip,
+  take,
   accessToken) {
     var params = {
         teamNumber: teamNumber,
@@ -13,9 +14,9 @@ async function run(
         NumAliases: 100,
         IncludeStats: true,
         SortBy: 'ScoreDesc',
-        Skip: 0,
-        Take: count,
-        totalFetchCount: count
+        Skip: skip,
+        Take: take,
+        totalFetchCount: take
     };
 
     var companies = null;
