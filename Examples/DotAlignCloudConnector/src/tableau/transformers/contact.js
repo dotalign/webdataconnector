@@ -37,28 +37,6 @@ function transform(dotAlignContacts, tableau) {
             row["best_introducer_id"] = topIntroducer.UserKeyMd5;
         }
 
-        // if (contact.Urls != null) {
-        //     var urls = [];
-
-        //     for (j = 0; j < contact.Urls.data.length; j++) { 
-        //         var url = contact.Urls.data[j].UrlText;
-        //         urls.push(url);
-        //     }
-        
-        //     row.urls = urls;
-        // }
-
-        // if (contact.Aliases != null) {
-        //     var names = [];
-
-        //     for (k = 0; k < contact.Aliases.data.length; k++) { 
-        //         var name = contact.Aliases.data[k].NameText;
-        //         names.push(name);
-        //     }
-
-        //     row.names = names;
-        // }
-
         tableauContacts.push(row);
     }
 

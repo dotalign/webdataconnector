@@ -57,12 +57,6 @@ function getSchema() {
     }, { 
         id: "latest_outbound_message_with_colleague",
         dataType: tableau.dataTypeEnum.string
-    }, { 
-        id: "urls",
-        dataType: tableau.dataTypeEnum.string
-    }, { 
-        id: "names",
-        dataType: tableau.dataTypeEnum.string
     }];
 
     var schema = {
