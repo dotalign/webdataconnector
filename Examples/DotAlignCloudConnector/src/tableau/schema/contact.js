@@ -1,9 +1,9 @@
 function getTableName() { 
-    return 'Contact';
+    return 'contact';
 }
 
 function getSchema() { 
-    var contactColumns = [{
+    var columns = [{
         id: "contact_id",
         dataType: tableau.dataTypeEnum.string
     }, {
@@ -50,12 +50,12 @@ function getSchema() {
         dataType: tableau.dataTypeEnum.string
     }];
 
-    var contactTableSchema = {
+    var schema = {
         id: getTableName(),
-        columns: contactColumns
+        columns: columns
     };
 
-    return contactTableSchema;
+    return schema;
 }
 
 module.exports = {

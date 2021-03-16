@@ -9,13 +9,13 @@ function transform(dotAlignContacts, tableau) {
         }
 
         var row = {
-            'contact_id': contact.PersonMd5,
-            'best_name': contact.PersonNameText,
-            'best_email_address': contact.BestEmailAddrText,
-            'best_job_title': contact.BestJobTitleText,
-            'best_company_name': contact.BestJobMatchedCompanyName || contact.BestJobCorpLevelCompanyName,
+            "contact_id": contact.PersonMd5,
+            "best_name": contact.PersonNameText,
+            "best_email_address": contact.BestEmailAddrText,
+            "best_job_title": contact.BestJobTitleText,
+            "best_company_name": contact.BestJobMatchedCompanyName || contact.BestJobCorpLevelCompanyName,
 
-            'relationship_score': contact.Score,
+            "relationship_score": contact.Score,
 
             "latest_meeting_date": contact.Stats.LastMeeting,
             "latest_meeting_with_colleague": contact.Stats.LastMeetingUserName,
@@ -32,9 +32,9 @@ function transform(dotAlignContacts, tableau) {
         }
 
         if (null != topIntroducer) {
-            row['best_introducer_name'] = topIntroducer.IntroducerName;
-            row['best_introducer_relationship_score'] = topIntroducer.ScorePoints;
-            row['best_introducer_id'] = topIntroducer.UserKeyMd5;
+            row["best_introducer_name"] = topIntroducer.IntroducerName;
+            row["best_introducer_relationship_score"] = topIntroducer.ScorePoints;
+            row["best_introducer_id"] = topIntroducer.UserKeyMd5;
         }
 
         // if (contact.Urls != null) {
@@ -64,7 +64,9 @@ function transform(dotAlignContacts, tableau) {
 
     tableau.reportProgress("Done converting data from DotAlign to Tableau format");
 
-    return tableauContacts;
+    return {
+        contacts: tableauContacts
+    }
 }
 
 module.exports = {

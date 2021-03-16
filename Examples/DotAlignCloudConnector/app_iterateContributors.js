@@ -10,7 +10,8 @@ async function main() {
         0 /* skip */,
         10 /* take */,
         500 /* contactCount */, 
-        500 /* companyCount */);
+        500 /* companyCount */,
+        null /* accessToken */);
 }
 
 main();

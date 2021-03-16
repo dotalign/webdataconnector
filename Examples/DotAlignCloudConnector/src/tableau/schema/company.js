@@ -1,9 +1,9 @@
 function getTableName() { 
-    return 'Company';
+    return 'company';
 }
 
 function getSchema() { 
-    var companyColumns = [{
+    var columns = [{
         id: "company_id",
         dataType: tableau.dataTypeEnum.string
     }, {
@@ -65,12 +65,12 @@ function getSchema() {
         dataType: tableau.dataTypeEnum.string
     }];
 
-    var companyTableSchema = {
+    var schema = {
         id: getTableName(),
-        columns: companyColumns
+        columns: columns
     };
 
-    return companyTableSchema;
+    return schema;
 };
 
 module.exports = {
