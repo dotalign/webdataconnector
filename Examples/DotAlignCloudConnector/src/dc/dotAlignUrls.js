@@ -15,7 +15,7 @@ async function contactsFetchUrlCreator(baseUrl, params) {
     return url;
 }
 
-async function companiesFetchUrlCreatorNew(baseUrl, params) {
+async function companiesFetchUrlCreator(baseUrl, params) {
     var qps = querystring.stringify(params);
     var url = `${baseUrl}/companies?${qps}`;
     return url;
@@ -44,7 +44,7 @@ async function contributorCompaniesFetchUrlCreator(baseUrl, params) {
 module.exports = { 
     teamMemberFetchUrlCreator, 
     contactsFetchUrlCreator,
-    companiesFetchUrlCreatorNew,
+    companiesFetchUrlCreator,
     contributorPeopleFetchUrlCreator, 
     contributorCompaniesFetchUrlCreator 
 }

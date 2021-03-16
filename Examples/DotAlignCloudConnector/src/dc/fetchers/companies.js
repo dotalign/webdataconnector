@@ -24,12 +24,12 @@ async function run(
         companies = await dotAlignCloud.fetchDC(
             environment, 
             params, 
-            dotAlignUrls.companiesFetchUrlCreatorNew);
+            dotAlignUrls.companiesFetchUrlCreator);
     } else {
         companies = await dotAlignCloud.fetchDCWithAccessToken(
             environment, 
             params, 
-            dotAlignUrls.companiesFetchUrlCreatorNew,
+            dotAlignUrls.companiesFetchUrlCreator,
             accessToken);
     }
 
