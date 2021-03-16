@@ -157,6 +157,8 @@ async function fetchDC(environment, params, urlCreator) {
             accessToken = response.access_token;
         }
     }
+
+    return result;
 }
 
 async function fetchDCWithAccessToken(
@@ -167,6 +169,11 @@ async function fetchDCWithAccessToken(
     var done = false;
     var fetched = 0;
     var apiBaseUrl = environment.apiBaseUrl;
+
+    if (null == accessToken) { 
+        var response = await getAccessToken(environment);
+        accessToken = response.access_token;
+    }
 
     while (!done) {
         params.skip = fetched;

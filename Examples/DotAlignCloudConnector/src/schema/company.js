@@ -4,13 +4,16 @@ function getTableName() {
 
 function getSchema() { 
     var companyColumns = [{
-        id: "company_name",
+        id: "company_id",
         dataType: tableau.dataTypeEnum.string
     }, {
-        id: "company_url",
+        id: "best_name",
         dataType: tableau.dataTypeEnum.string
     }, {
-        id: "company_relationship_score",
+        id: "best_url",
+        dataType: tableau.dataTypeEnum.string
+    }, {
+        id: "relationship_score",
         dataType: tableau.dataTypeEnum.int
     }, {
         id: "best_contact_name",
@@ -22,34 +25,37 @@ function getSchema() {
         id: "best_introducer_name",
         dataType: tableau.dataTypeEnum.string
     }, {
-        id: "introducer_contact_relationship_score",
+        id: "best_introducer_contact_relationship_score",
         dataType: tableau.dataTypeEnum.int
+    }, {
+        id: "best_introducer_id",
+        dataType: tableau.dataTypeEnum.string
     }, {
         id: "latest_meeting_date",
         dataType: tableau.dataTypeEnum.datetime
     }, {
-        id: "latest_meeting_organizer",
+        id: "latest_meeting_with_contact",
         dataType: tableau.dataTypeEnum.string
     }, { 
-        id: "latest_meeting_contact",
+        id: "latest_meeting_with_colleague",
         dataType: tableau.dataTypeEnum.string
     }, {   
-        id: "latest_inbound_email_date", 
+        id: "latest_inbound_message_date", 
         dataType: tableau.dataTypeEnum.datetime
     }, { 
-        id: "latest_inbound_email_sender",
+        id: "latest_inbound_message_with_contact",
         dataType: tableau.dataTypeEnum.string
     }, { 
-        id: "latest_inbound_email_recipient",
+        id: "latest_inbound_message_with_colleague",
         dataType: tableau.dataTypeEnum.string
     }, { 
         id: "latest_outbound_email_date",
         dataType: tableau.dataTypeEnum.datetime
     }, { 
-        id: "latest_outbound_email_sender",
+        id: "latest_outbound_message_with_contact",
         dataType: tableau.dataTypeEnum.string
     }, { 
-        id: "latest_outbound_email_recipient",
+        id: "latest_outbound_message_with_colleague",
         dataType: tableau.dataTypeEnum.string
     }, { 
         id: "urls",

@@ -1,3 +1,5 @@
+const querystring = require('querystring')
+
 async function teamMemberFetchUrlCreator(baseUrl, params) {
   var teamNumber = params.teamNumber;
   var skip = params.skip;
@@ -7,21 +9,15 @@ async function teamMemberFetchUrlCreator(baseUrl, params) {
   return url;
 }
 
-async function peopleFetchUrlCreator(baseUrl, params) {
-  var teamNumber = params.teamNumber;
-  var skip = params.skip;
-  var take = params.take;
-  var detailLevel = params.detailLevel;
-  var url = `${baseUrl}/people?SourceTeam=${teamNumber}&Skip=${skip}&Take=${take}&IncludeDetailLevel=${detailLevel}`;
-  return url;
+async function contactsFetchUrlCreator(baseUrl, params) {
+    var qps = querystring.stringify(params);
+    var url = `${baseUrl}/people?${qps}`;
+    return url;
 }
 
-async function companiesFetchUrlCreator(baseUrl, params) {
-    var teamNumber = params.teamNumber;
-    var skip = params.skip;
-    var take = params.take;
-    var detailLevel = params.detailLevel;
-    var url = `${baseUrl}/companies?SourceTeam=${teamNumber}&Skip=${skip}&Take=${take}&IncludeDetailLevel=${detailLevel}`;
+async function companiesFetchUrlCreatorNew(baseUrl, params) {
+    var qps = querystring.stringify(params);
+    var url = `${baseUrl}/companies?${qps}`;
     return url;
 }
 
@@ -47,8 +43,8 @@ async function contributorCompaniesFetchUrlCreator(baseUrl, params) {
 
 module.exports = { 
     teamMemberFetchUrlCreator, 
-    peopleFetchUrlCreator,
-    companiesFetchUrlCreator,
+    contactsFetchUrlCreator,
+    companiesFetchUrlCreatorNew,
     contributorPeopleFetchUrlCreator, 
     contributorCompaniesFetchUrlCreator 
 }

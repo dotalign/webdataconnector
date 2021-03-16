@@ -22,6 +22,8 @@ var dotalignTableau = require('./dotAlignTableau');
 
         var accessToken = Cookies.get("accessToken");
 
+        console.log('About to check hasAuth');
+
         var hasAuth = (accessToken && accessToken.length > 0) || tableau.password.length > 0;
         updateUIWithAuthState(hasAuth);
 
@@ -55,8 +57,11 @@ var dotalignTableau = require('./dotAlignTableau');
         dotalignTableau.getData(
             accessToken, 
             table,
-            doneCallback, 
-            tableau);
+            tableau)
+            .then(rows => { 
+                table.appendRows(rows);
+                doneCallback();
+            });
     };
 
     tableau.registerConnector(dotalignConnector);
@@ -64,6 +69,7 @@ var dotalignTableau = require('./dotAlignTableau');
 
 $(document).ready(function() {
     var accessToken = Cookies.get("accessToken");
+    console.log('In ready');
     var hasAuth = accessToken && accessToken.length > 0;
 
     if (hasAuth) { 
