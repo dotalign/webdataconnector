@@ -1,18 +1,19 @@
-const dotAlignCloud = require("../../dotAlignCloud");
+const dotAlignCloud = require("../dotAlignCloud");
 const dotAlignUrls = require("../dotAlignUrls");
 
 async function run(
-  environment,
-  teamNumber, 
-  numberOfContributors,
-  peopleFetchCount,
-  companiesFetchCount) {
+    environment,
+    teamNumber,
+    skip,
+    take,
+    contactCount,
+    companyCount) {
+
     var teamMembersParams = {
       teamNumber: teamNumber,
-      skip: 0,
-      take: 100,
-      includeHealthStats: false,
-      totalFetchCount: numberOfContributors
+      skip: skip,
+      take: take,
+      includeHealthStats: false
     };
 
     var members = await dotAlignCloud.fetchDC(
@@ -25,32 +26,44 @@ async function run(
     for (var i = 0; i < members.data.length; i++) { 
         var member = members.data[i];
       
-        var params = { 
-          teamNumber: teamNumber,
-          skip: 0,
-          take: 200,
-          detailLevel: "IncludeDependentDetailsAndInteractionStats",
-          totalFetchCount: peopleFetchCount,
-          contributorKey: member.userKey
+        var contactsParams = { 
+            contributorKey: member.userKey,
+            teamNumber: teamNumber,
+            colleagueFlag: 'External',
+            numAliases: 100,
+            numJobs: 100,
+            numPhones: 100,
+            numEmails: 100,
+            includeStats: true,
+            sortBy: 'ScoreDesc',
+            skip: 0,
+            take: contactCount
         };
         
-        console.log(`\n\nFetching people for ${member.userKey}`);
-        console.log(`-------`);
+        console.log(`\n\n > Fetching people for ${member.userKey}`);
         
         var people = await dotAlignCloud.fetchDC(
           environment, 
-          params, 
+          contactsParams, 
           dotAlignUrls.contributorPeopleFetchUrlCreator);
         
-        console.log(`\nFetching companies for ${member.userKey}`);
-        console.log(`-------`);
+        console.log(`\n > Fetching companies for ${member.userKey}`);
+
+        var companiesParams = {
+            contributorKey: member.userKey,
+            teamNumber: teamNumber,
+            numUrls: 100,
+            numAliases: 100,
+            includeStats: true,
+            sortBy: 'ScoreDesc',
+            skip: 0,
+            take: companyCount
+        };
 
         var companies = await dotAlignCloud.fetchDC(
           environment, 
-          params, 
+          companiesParams, 
           dotAlignUrls.contributorCompaniesFetchUrlCreator);
-
-        var userKey = member.userKey;
 
         result.push({ 
           contributor: member,

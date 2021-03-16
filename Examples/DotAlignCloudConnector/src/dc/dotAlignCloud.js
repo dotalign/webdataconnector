@@ -11,9 +11,6 @@ async function postData(url, body) {
     },
   });
 
-  console.log("Response: ");
-  dotAlignUtils.logObject(response);
-
   return response.json();
 }
 
@@ -26,9 +23,6 @@ async function postDataGetResponse(url, body) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
-
-    console.log("Response: ");
-    dotAlignUtils.logObject(response);
 
     var responseJson = response.json();
     console.log("Response json: ");
