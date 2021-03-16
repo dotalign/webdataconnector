@@ -1,11 +1,11 @@
-var helpers = require('./helpers');
-var dotAlignUtils = require('./dotAlignUtils');
-var companySchema = require('./schema/company');
-var contactSchema = require('./schema/contact');
-var companiesFetcher = require('./fetchers/companies');
-var contactsFetcher = require('./fetchers/contacts');
-var companyTransformer = require('./transformers/company');
-var contactTransformer = require('./transformers/contact');
+var helpers = require('../helpers');
+var dotAlignUtils = require('../dotAlignUtils');
+var companySchema = require('../schema/tableau/company');
+var contactSchema = require('../schema/tableau/contact');
+var companiesFetcher = require('../fetchers/companies');
+var contactsFetcher = require('../fetchers/contacts');
+var companyTransformer = require('../transformers/tableau/company');
+var contactTransformer = require('../transformers/tableau/contact');
 
 function getSchema(schemaCallback) { 
     schemaCallback([contactSchema.getSchema(), companySchema.getSchema()]);
