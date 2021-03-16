@@ -21,7 +21,7 @@ async function run(
         take: take
     };
 
-    var contacts = await dotAlignCloud.fetchDCWithAccessToken(
+    var contacts = await dotAlignCloud.fetchDC(
         environment, 
         params, 
         dotAlignUrls.contactsFetchUrlCreator,

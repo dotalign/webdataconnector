@@ -7,7 +7,8 @@ async function run(
     skip,
     take,
     contactCount,
-    companyCount) {
+    companyCount,
+    accessToken) {
 
     var teamMembersParams = {
       teamNumber: teamNumber,
@@ -19,7 +20,8 @@ async function run(
     var members = await dotAlignCloud.fetchDC(
         environment, 
         teamMembersParams, 
-        dotAlignUrls.teamMemberFetchUrlCreator);
+        dotAlignUrls.teamMemberFetchUrlCreator,
+        accessToken);
     
     var result = [];
 
@@ -45,7 +47,8 @@ async function run(
         var people = await dotAlignCloud.fetchDC(
           environment, 
           contactsParams, 
-          dotAlignUrls.contributorPeopleFetchUrlCreator);
+          dotAlignUrls.contributorPeopleFetchUrlCreator,
+          accessToken);
         
         console.log(`\n > Fetching companies for ${member.userKey}`);
 
@@ -63,7 +66,8 @@ async function run(
         var companies = await dotAlignCloud.fetchDC(
           environment, 
           companiesParams, 
-          dotAlignUrls.contributorCompaniesFetchUrlCreator);
+          dotAlignUrls.contributorCompaniesFetchUrlCreator,
+          accessToken);
 
         result.push({ 
           contributor: member,

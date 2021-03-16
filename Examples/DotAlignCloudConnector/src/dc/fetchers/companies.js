@@ -18,20 +18,11 @@ async function run(
         take: take
     };
 
-    var companies = null;
-
-    if (null == accessToken) { 
-        companies = await dotAlignCloud.fetchDC(
-            environment, 
-            params, 
-            dotAlignUrls.companiesFetchUrlCreator);
-    } else {
-        companies = await dotAlignCloud.fetchDCWithAccessToken(
-            environment, 
-            params, 
-            dotAlignUrls.companiesFetchUrlCreator,
-            accessToken);
-    }
+    var companies = await dotAlignCloud.fetchDC(
+        environment, 
+        params, 
+        dotAlignUrls.companiesFetchUrlCreator,
+        accessToken);
 
     return companies;
 }

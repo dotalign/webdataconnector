@@ -131,37 +131,7 @@ async function getSomeData(apiBaseUrl, accessToken, params, urlCreator) {
     };
 }
 
-async function fetchDC(environment, params, urlCreator) {
-    var response = await getAccessToken(environment);
-    var accessToken = response.access_token;
-    var done = false;
-    var fetched = 0;
-    var apiBaseUrl = environment.apiBaseUrl;
-
-    while (!done) {
-        params.skip = fetched;
-
-        var result = null;
-
-        try {
-            var before = process.hrtime();
-            result = await getSomeData(apiBaseUrl, accessToken, params, urlCreator);
-            var elapsed = process.hrtime(before);
-            console.log(`Finished a run in ${elapsed[0]} seconds. ${result.fetched} items were fetched.`);
-            done = true;
-        } catch (e) {
-            dotAlignUtils.logObject(e);
-            console.log(`An exception was encountered. Fetched ${e.fetched} so far.`);
-            fetched = e.fetched;
-            response = await getAccessToken(environment);
-            accessToken = response.access_token;
-        }
-    }
-
-    return result;
-}
-
-async function fetchDCWithAccessToken(
+async function fetchDC(
     environment, 
     params, 
     urlCreator, 
@@ -201,6 +171,5 @@ module.exports = {
     postData,
     postDataGetResponse,
     getAccessToken,
-    fetchDCWithAccessToken,
-    fetchDC 
+    fetchDC,
 };
