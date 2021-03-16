@@ -55,6 +55,9 @@ var dotalignTableau = require('./dotAlignTableau');
         dotalignTableau.getData(
             accessToken, 
             table,
+            1 /* teamNumber */,
+            0 /* skip */,
+            500 /* take */,
             tableau)
             .then(rows => { 
                 table.appendRows(rows);

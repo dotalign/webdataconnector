@@ -1,5 +1,4 @@
 var helpers = require('../dc/helpers');
-var dotAlignUtils = require('../dc/dotAlignUtils');
 var companySchema = require('./schema/company');
 var contactSchema = require('./schema/contact');
 var companiesFetcher = require('../dc/fetchers/companies');
@@ -11,11 +10,14 @@ function getSchema(schemaCallback) {
     schemaCallback([contactSchema.getSchema(), companySchema.getSchema()]);
 };
 
-async function getData(accessToken, table, tableau) {
+async function getData(
+    accessToken, 
+    table,
+    teamNumber,
+    skip,
+    take,
+    tableau) {
     var environment = helpers.getEnvironmentParams();
-    var teamNumber = 1;
-    var skip = 0;
-    var take = 500;
     var rows = [];
 
     var result = await getDataFromDotAlign(
@@ -85,7 +87,7 @@ async function getDataFromDotAlign(
         
         default:
 
-            throw `Unexpected category of data requested: ${tableName}` 
+            throw `Unexpected table name requested: ${tableName}` 
     }
 
     if (null != tableau) {
