@@ -9,17 +9,16 @@ async function run(
   accessToken) {
     var params = {
         teamNumber: teamNumber,
-        ColleagueFlag: 'External',
-        NumIntroducers: 100,
-        NumAliases: 100,
-        NumJobs: 100,
-        NumPhones: 100,
-        NumEmails: 100,
-        IncludeStats: true,
-        SortBy: 'ScoreDesc',
-        Skip: skip,
-        Take: take,
-        totalFetchCount: take
+        colleagueFlag: 'External',
+        numIntroducers: 100,
+        numAliases: 100,
+        numJobs: 100,
+        numPhones: 100,
+        numEmails: 100,
+        includeStats: true,
+        sortBy: 'ScoreDesc',
+        skip: skip,
+        take: take
     };
 
     var contacts = await dotAlignCloud.fetchDCWithAccessToken(

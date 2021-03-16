@@ -9,14 +9,13 @@ async function run(
   accessToken) {
     var params = {
         teamNumber: teamNumber,
-        NumIntroducers: 100,
-        NumUrls: 100,
-        NumAliases: 100,
-        IncludeStats: true,
-        SortBy: 'ScoreDesc',
-        Skip: skip,
-        Take: take,
-        totalFetchCount: take
+        numIntroducers: 100,
+        numUrls: 100,
+        numAliases: 100,
+        includeStats: true,
+        sortBy: 'ScoreDesc',
+        skip: skip,
+        take: take
     };
 
     var companies = null;

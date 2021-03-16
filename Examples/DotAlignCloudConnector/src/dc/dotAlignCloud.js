@@ -91,13 +91,19 @@ async function getDataWithRetries(maxRetries, url, accessToken) {
 }
 
 async function getSomeData(apiBaseUrl, accessToken, params, urlCreator) {
-    var totalFetchCount = params.totalFetchCount;
+    var batchSize = 100;
     var fetched = 0;
     var areMore = true;
     var maxRetries = 3;
     var data = [];
 
-    while (areMore && fetched < totalFetchCount) {
+    var requestedCount = params.take
+
+    if (params.take > batchSize) { 
+        params.take = batchSize;
+    }
+
+    while (areMore && fetched < requestedCount) {
         var before = Date.now();
         var url = await urlCreator(apiBaseUrl, params);
         var result = null;
