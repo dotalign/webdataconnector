@@ -1,4 +1,4 @@
-const dotAlignCloud = require("../dotAlignCloud");
+const dotAlignCloud = require("../../dotAlignCloud");
 const dotAlignUrls = require("../dotAlignUrls");
 
 async function run(

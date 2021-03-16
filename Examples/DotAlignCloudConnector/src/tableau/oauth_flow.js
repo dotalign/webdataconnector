@@ -1,4 +1,4 @@
-var helpers = require('../helpers');
+var helpers = require('../dc/helpers');
 var dotalignTableau = require('./dotAlignTableau');
 
 (function() {

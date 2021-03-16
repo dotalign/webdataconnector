@@ -1,9 +1,9 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var http = require('http');
-var helpers = require('./src/helpers');
-var dotAlignCloud = require('./src/dotAlignCloud');
-var dotAlignUtils = require('./src/dotAlignUtils');
+var helpers = require('./src/dc/helpers');
+var dotAlignCloud = require('./src/dc/dotAlignCloud');
+var dotAlignUtils = require('./src/dc/dotAlignUtils');
 var app = express();
 
 var environment = helpers.getEnvironmentParams();

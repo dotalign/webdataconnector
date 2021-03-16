@@ -1,9 +1,9 @@
-var helpers = require('../helpers');
-var dotAlignUtils = require('../dotAlignUtils');
+var helpers = require('../dc/helpers');
+var dotAlignUtils = require('../dc/dotAlignUtils');
 var companySchema = require('./schema/company');
 var contactSchema = require('./schema/contact');
-var companiesFetcher = require('../fetchers/companies');
-var contactsFetcher = require('../fetchers/contacts');
+var companiesFetcher = require('../dc/fetchers/companies');
+var contactsFetcher = require('../dc/fetchers/contacts');
 var companyTransformer = require('./transformers/company');
 var contactTransformer = require('./transformers/contact');
 
